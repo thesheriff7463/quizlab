@@ -30,7 +30,8 @@ async function saveScore(entry) {
   if (!isConfigured()) return;
   try {
     const existing = await loadScores();
-    const updated = [...existing.filter(s => s.id !== entry.id), entry];
+    const updated = existing.filter(s => s.id !== entry.id);
+    updated.push(entry);
     const res = await fetch(BIN_URL, {
       method: 'PUT',
       headers: {
@@ -65,10 +66,12 @@ async function clearAllScores() {
 function getLocal() {
   try { return JSON.parse(localStorage.getItem(LOCAL_KEY) || '[]'); } catch { return []; }
 }
+
 function saveLocal(entry) {
   try {
     const scores = getLocal();
-    const updated = [...scores.filter(s => s.id !== entry.id), entry];
+    const updated = scores.filter(s => s.id !== entry.id);
+    updated.push(entry);
     localStorage.setItem(LOCAL_KEY, JSON.stringify(updated));
   } catch(e) {}
 }
