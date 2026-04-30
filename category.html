@@ -10,7 +10,6 @@
 <div class="header">
   <div class="header-inner">
     <a href="index.html" class="logo">QuizLab</a>
-    <a href="host.html" class="btn btn-outline">Host dashboard</a>
   </div>
 </div>
 
@@ -44,7 +43,6 @@ if (!cat) {
     grid.innerHTML = '<p class="text-muted text-sm">No quizzes in this category yet.</p>';
   } else {
     quizzes.forEach(q => {
-      const mins = Math.ceil(q.questions.length * 20 / 60);
       const card = document.createElement('a');
       card.href = 'quiz.html?id=' + q.id;
       card.className = 'quiz-card';
