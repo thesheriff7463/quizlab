@@ -27,8 +27,8 @@
   --ans-b-d:    #1D4ED8;
   --ans-c:      #D97706;
   --ans-c-d:    #B45309;
-  --ans-d:      #DC2626;
-  --ans-d-d:    #B91C1C;
+  --ans-d:      #0891B2;
+  --ans-d-d:    #0E7490;
   --radius:     12px;
   --radius-lg:  16px;
   --radius-xl:  24px;
@@ -165,8 +165,8 @@ body {
 .ans-btn[data-i="3"] { background: var(--ans-d); }
 .ans-letter { width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0; }
 .ans-btn.correct { background: #059669 !important; outline: 4px solid #fff; transform: scale(1.02); }
-.ans-btn.wrong { background: #DC2626 !important; opacity: 0.9; }
-.ans-btn.dimmed { opacity: 0.35; }
+.ans-btn.wrong { background: #111827 !important; opacity: 1; }
+.ans-btn.dimmed { opacity: 0.25; filter: grayscale(0.5); }
 
 /* ── Feedback ── */
 .feedback-bar { text-align: center; padding: 10px; font-size: 16px; font-weight: 700; border-radius: var(--radius); max-width: 780px; margin: 0.5rem auto; width: calc(100% - 2.5rem); }
@@ -235,7 +235,6 @@ body {
 
 .flag { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
 .flag-cheat { background: var(--red-l); color: var(--red); }
-.flag-done { background: var(--green-l); color: var(--green-d); }
 
 .sub-row { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-bottom: 1px solid var(--gray-100); cursor: pointer; font-size: 13px; }
 .sub-row:last-child { border-bottom: none; }
