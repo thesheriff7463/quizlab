@@ -217,7 +217,7 @@ function confirmEnd() {
   if (confirm('End the quiz now? Your current score will be submitted.')) {
     finishQuiz();
   } else {
-    setupAntiCheat();
+    setTimeout(() => setupAntiCheat(), 500);
   }
 }
 
