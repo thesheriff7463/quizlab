@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Category — Berklee Quizzes</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="header">
+  <div class="header-inner">
+    <a href="index.html" class="logo">Berklee Quizzes</a>
+    <a href="host.html" class="btn btn-outline">Host dashboard</a>
+  </div>
+</div>
+
+<div class="container">
+  <a href="index.html" class="back-link">← All categories</a>
+
+  <div id="catHeader" style="margin-bottom:1.5rem">
+    <h1 id="catName" style="font-size:28px;font-weight:800;margin-bottom:4px"></h1>
+    <p id="catDesc" class="text-muted text-sm"></p>
+  </div>
+
+  <div class="quiz-grid" id="quizGrid"></div>
+</div>
+
+<script src="js/quizzes.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+const catId = params.get('id');
+const cat = CATEGORIES.find(c => c.id === catId);
+
+if (!cat) {
+  document.getElementById('catName').textContent = 'Category not found';
+} else {
+  document.title = cat.name + ' — Berklee Quizzes';
+  document.getElementById('catName').textContent = cat.icon + '  ' + cat.name;
+
+  const quizzes = QUIZZES.filter(q => q.category === catId);
+  const grid = document.getElementById('quizGrid');
+
+  if (quizzes.length === 0) {
+    grid.innerHTML = '<p class="text-muted text-sm">No quizzes in this category yet.</p>';
+  } else {
+    quizzes.forEach(q => {
+      const mins = Math.ceil(q.questions.length * (q.timePerQuestion || 20) / 60);
+      const card = document.createElement('a');
+      card.href = `quiz.html?id=${q.id}`;
+      card.className = 'quiz-card';
+      card.innerHTML = `
+        <div class="quiz-card-cat">${cat.name}</div>
+        <div class="quiz-card-title">${q.title}</div>
+        <div class="quiz-card-desc">${q.description || ''}</div>
+        <div class="quiz-card-meta">
+          <span>📋 ${q.questions.length} questions</span>
+          <span>⏱ ~${mins} min</span>
+          <span>🔀 Shuffled</span>
+        </div>
+        <div class="quiz-card-play">Start quiz →</div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+}
+</script>
+</body>
+</html>

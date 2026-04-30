@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz — Berklee</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="cheat-banner" id="cheatBanner">⚠️ Heads up — leaving this tab is being recorded!</div>
+
+<!-- HEADER -->
+<div class="header" id="mainHeader">
+  <div class="header-inner">
+    <a href="index.html" class="logo">Berklee Quizzes</a>
+    <span class="text-sm text-muted" id="headerTitle"></span>
+  </div>
+</div>
+
+<!-- NAME ENTRY SCREEN -->
+<div id="screenName" class="name-screen">
+  <div class="name-card">
+    <div class="name-card-icon" id="nameIcon">📋</div>
+    <h2 id="nameTitle">Loading...</h2>
+    <p id="nameDesc">Enter your name to get started.</p>
+    <input type="text" class="name-input" id="nameInput" placeholder="Your full name" maxlength="60" autocomplete="name" />
+    <button class="btn btn-primary btn-lg btn-full" onclick="startQuiz()" id="startBtn">Let's go →</button>
+    <p class="name-hint">Your score goes straight to your instructor.</p>
+  </div>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div id="screenQuiz" class="quiz-screen" style="display:none">
+  <div class="quiz-topbar">
+    <div class="quiz-topbar-progress">
+      <div class="qprogress-label" id="qLabel">Question 1 of 10</div>
+      <div class="qprogress-bar"><div class="qprogress-fill" id="qFill" style="width:0%"></div></div>
+    </div>
+    <div class="quiz-topbar-score">
+      <div class="score-label">Points</div>
+      <div class="score-num" id="scoreNum">0</div>
+    </div>
+  </div>
+
+  <div class="timer-section">
+    <div class="timer-ring" id="timerRing">
+      <svg width="72" height="72" viewBox="0 0 72 72">
+        <circle class="timer-ring-bg" cx="36" cy="36" r="30"/>
+        <circle class="timer-ring-fill" id="timerCircle" cx="36" cy="36" r="30"
+          stroke-dasharray="188.5" stroke-dashoffset="0"/>
+      </svg>
+      <div class="timer-num" id="timerNum">20</div>
+    </div>
+  </div>
+
+  <div class="question-section">
+    <div class="question-num" id="questionNum">Question 1</div>
+    <div class="question-text" id="questionText">Loading...</div>
+  </div>
+
+  <div class="feedback-bar hidden" id="feedbackBar">Correct!</div>
+
+  <div class="answers-grid" id="answersGrid"></div>
+</div>
+
+<!-- MID-QUIZ LEADERBOARD -->
+<div id="screenMidLB" style="display:none">
+  <div class="header">
+    <div class="header-inner">
+      <span class="logo">Berklee Quizzes</span>
+    </div>
+  </div>
+  <div class="mid-lb">
+    <h2>🏆 Leaderboard</h2>
+    <div id="midLBRows"></div>
+    <button class="btn btn-primary btn-full mt-2" id="nextBtn" onclick="nextQuestion()">Next question →</button>
+  </div>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div id="screenResult" style="display:none">
+  <div class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">Berklee Quizzes</a>
+    </div>
+  </div>
+  <div class="results-screen">
+    <div class="results-podium">
+      <div class="results-emoji" id="resultEmoji">🎉</div>
+      <div class="results-name" id="resultName"></div>
+      <div class="results-sub" id="resultSub"></div>
+    </div>
+
+    <div class="score-circle">
+      <div class="score-circle-pct" id="resultPct">0%</div>
+      <div class="score-circle-frac" id="resultFrac">0/0</div>
+    </div>
+
+    <div class="results-stats">
+      <div class="result-stat">
+        <div class="result-stat-num" id="resultPoints" style="color:#7C3AED">0</div>
+        <div class="result-stat-label">Points</div>
+      </div>
+      <div class="result-stat">
+        <div class="result-stat-num" id="resultCorrect" style="color:#059669">0</div>
+        <div class="result-stat-label">Correct</div>
+      </div>
+      <div class="result-stat">
+        <div class="result-stat-num" id="resultStreak">0</div>
+        <div class="result-stat-label">Best streak</div>
+      </div>
+    </div>
+
+    <div class="results-breakdown" id="resultBreakdown"></div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+      <a href="index.html" class="btn btn-outline btn-lg">Back to quizzes</a>
+      <button class="btn btn-primary btn-lg" onclick="location.reload()">Try again</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/quizzes.js"></script>
+<script src="js/scores.js"></script>
+<script>
+// ── State ──
+let quiz, questions, currentQ = 0, score = 0, points = 0;
+let playerName = '';
+let timerInterval, timeLeft, totalTime;
+let answered = false;
+let cheatCount = 0;
+let results = [];
+let streak = 0, bestStreak = 0;
+const CIRCUMFERENCE = 188.5;
+const LETTERS = ['A','B','C','D','E'];
+
+// ── Load quiz ──
+const params = new URLSearchParams(location.search);
+const quizId = params.get('id');
+quiz = QUIZZES.find(q => q.id === quizId);
+
+if (!quiz) {
+  document.getElementById('nameTitle').textContent = 'Quiz not found';
+  document.getElementById('nameDesc').textContent = 'Check the link and try again.';
+  document.getElementById('startBtn').disabled = true;
+} else {
+  const cat = CATEGORIES.find(c => c.id === quiz.category);
+  document.getElementById('nameTitle').textContent = quiz.title;
+  document.getElementById('nameDesc').textContent = quiz.description || '';
+  document.getElementById('nameIcon').textContent = cat ? cat.icon : '📋';
+  document.getElementById('headerTitle').textContent = quiz.title;
+  document.title = quiz.title + ' — Berklee';
+}
+
+document.getElementById('nameInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') startQuiz();
+});
+
+function startQuiz() {
+  playerName = document.getElementById('nameInput').value.trim();
+  if (!playerName) {
+    document.getElementById('nameInput').classList.add('error');
+    document.getElementById('nameInput').focus();
+    return;
+  }
+  questions = shuffle([...quiz.questions]);
+  currentQ = 0; score = 0; points = 0; streak = 0; bestStreak = 0; results = [];
+  show('screenQuiz');
+  setupAntiCheat();
+  renderQuestion();
+}
+
+// ── Question rendering ──
+function renderQuestion() {
+  answered = false;
+  const q = questions[currentQ];
+  const total = questions.length;
+  totalTime = quiz.timePerQuestion || 20;
+
+  document.getElementById('qLabel').textContent = `Question ${currentQ + 1} of ${total}`;
+  document.getElementById('qFill').style.width = Math.round((currentQ / total) * 100) + '%';
+  document.getElementById('questionNum').textContent = `Question ${currentQ + 1}`;
+  document.getElementById('questionText').textContent = q.q;
+  document.getElementById('scoreNum').textContent = points.toLocaleString();
+
+  // Reset feedback
+  const fb = document.getElementById('feedbackBar');
+  fb.className = 'feedback-bar hidden';
+
+  // Shuffle options but track correct answer
+  const indexed = q.options.map((opt, i) => ({ opt, correct: i === q.answer }));
+  const shuffled = shuffle(indexed);
+
+  const grid = document.getElementById('answersGrid');
+  grid.innerHTML = '';
+  shuffled.forEach((item, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'ans-btn';
+    btn.setAttribute('data-i', i);
+    btn.dataset.correct = item.correct;
+    btn.dataset.text = item.opt;
+    btn.innerHTML = `<span class="ans-letter">${LETTERS[i]}</span><span>${item.opt}</span>`;
+    btn.onclick = () => selectAnswer(btn, item.correct);
+    grid.appendChild(btn);
+  });
+
+  startTimer(totalTime);
+}
+
+function selectAnswer(btn, isCorrect) {
+  if (answered) return;
+  answered = true;
+  clearInterval(timerInterval);
+
+  const allBtns = document.querySelectorAll('.ans-btn');
+  allBtns.forEach(b => { b.disabled = true; });
+
+  const timeTaken = totalTime - timeLeft;
+  let earned = 0;
+
+  if (isCorrect) {
+    btn.classList.add('correct');
+    score++;
+    streak++;
+    if (streak > bestStreak) bestStreak = streak;
+    // Points: 600 base + up to 400 speed bonus
+    const speedBonus = Math.round(400 * Math.max(0, (totalTime - timeTaken) / totalTime));
+    earned = 600 + speedBonus;
+    points += earned;
+    showFeedback('correct', `+${earned} points!`);
+    allBtns.forEach(b => { if (!b.dataset.correct === 'true') b.classList.add('dimmed'); });
+  } else {
+    btn.classList.add('wrong');
+    streak = 0;
+    // Show correct answer
+    allBtns.forEach(b => {
+      if (b.dataset.correct === 'true') b.classList.add('correct');
+      else if (b !== btn) b.classList.add('dimmed');
+    });
+    showFeedback('wrong', 'Incorrect');
+  }
+
+  // Find correct text for breakdown
+  const correctBtn = Array.from(allBtns).find(b => b.dataset.correct === 'true');
+  results.push({
+    q: questions[currentQ].q,
+    correct: isCorrect,
+    yourAnswer: btn.dataset.text,
+    correctAnswer: correctBtn ? correctBtn.dataset.text : ''
+  });
+
+  document.getElementById('scoreNum').textContent = points.toLocaleString();
+  setTimeout(() => showMidLeaderboard(), 1200);
+}
+
+function showFeedback(type, msg) {
+  const fb = document.getElementById('feedbackBar');
+  fb.className = 'feedback-bar ' + type;
+  fb.textContent = type === 'correct' ? '✓ Correct! ' + msg : type === 'wrong' ? '✗ ' + msg : '⏱ Time\'s up!';
+}
+
+// ── Timer ──
+function startTimer(seconds) {
+  timeLeft = seconds;
+  const num = document.getElementById('timerNum');
+  const ring = document.getElementById('timerRing');
+  const circle = document.getElementById('timerCircle');
+
+  ring.className = 'timer-ring';
+  num.textContent = timeLeft;
+  circle.style.strokeDashoffset = 0;
+
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    num.textContent = timeLeft;
+    const progress = (seconds - timeLeft) / seconds;
+    circle.style.strokeDashoffset = CIRCUMFERENCE * progress;
+
+    if (timeLeft <= 5) ring.className = 'timer-ring danger';
+    else if (timeLeft <= Math.floor(seconds * 0.4)) ring.className = 'timer-ring warn';
+
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      if (!answered) timeOut();
+    }
+  }, 1000);
+}
+
+function timeOut() {
+  answered = true;
+  const allBtns = document.querySelectorAll('.ans-btn');
+  allBtns.forEach(b => { b.disabled = true; });
+  const correctBtn = Array.from(allBtns).find(b => b.dataset.correct === 'true');
+  if (correctBtn) correctBtn.classList.add('correct');
+  allBtns.forEach(b => { if (b !== correctBtn) b.classList.add('dimmed'); });
+  streak = 0;
+  showFeedback('timeout', 'Time\'s up!');
+  results.push({
+    q: questions[currentQ].q,
+    correct: false,
+    yourAnswer: 'No answer (time\'s up)',
+    correctAnswer: correctBtn ? correctBtn.dataset.text : ''
+  });
+  setTimeout(() => showMidLeaderboard(), 1200);
+}
+
+// ── Mid-quiz leaderboard ──
+async function showMidLeaderboard() {
+  if (currentQ + 1 >= questions.length) {
+    finishQuiz();
+    return;
+  }
+  show('screenMidLB');
+
+  // Build leaderboard from saved scores + current player
+  const saved = await loadScores();
+  const quizScores = saved.filter(s => s.quizId === quiz.id);
+
+  // Add current player's running score
+  const current = { name: playerName, points, isMe: true };
+  const others = quizScores.map(s => ({ name: s.name, points: s.points || 0 }));
+  const all = [...others, current].sort((a, b) => b.points - a.points);
+
+  const wrap = document.getElementById('midLBRows');
+  wrap.innerHTML = all.slice(0, 8).map((p, i) => {
+    const rankClass = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
+    const initials = p.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    return `
+      <div class="mid-lb-row ${p.isMe ? 'me' : ''}">
+        <div class="mid-lb-rank ${rankClass}">${i + 1}</div>
+        <div class="mid-lb-avatar">${initials}</div>
+        <div class="mid-lb-name">${p.name}${p.isMe ? ' (you)' : ''}</div>
+        <div class="mid-lb-score">${p.points.toLocaleString()} pts</div>
+      </div>`;
+  }).join('');
+}
+
+function nextQuestion() {
+  currentQ++;
+  show('screenQuiz');
+  renderQuestion();
+}
+
+// ── Finish ──
+async function finishQuiz() {
+  show('screenResult');
+  removeAntiCheat();
+
+  const total = questions.length;
+  const pct = Math.round((score / total) * 100);
+
+  document.getElementById('resultEmoji').textContent = pct === 100 ? '🏆' : pct >= 80 ? '🎉' : pct >= 60 ? '👍' : pct >= 40 ? '📚' : '💪';
+  document.getElementById('resultName').textContent = playerName;
+  document.getElementById('resultSub').textContent = getMessage(pct);
+  document.getElementById('resultPct').textContent = pct + '%';
+  document.getElementById('resultFrac').textContent = score + '/' + total;
+  document.getElementById('resultPoints').textContent = points.toLocaleString();
+  document.getElementById('resultCorrect').textContent = score;
+  document.getElementById('resultStreak').textContent = bestStreak;
+
+  const bd = document.getElementById('resultBreakdown');
+  bd.innerHTML = `<div class="breakdown-title">Question breakdown</div>` +
+    results.map(r => `
+      <div class="breakdown-row">
+        <div class="breakdown-icon ${r.correct ? 'c' : 'w'}">${r.correct ? '✓' : '✗'}</div>
+        <div>
+          <div class="breakdown-q">${r.q}</div>
+          ${!r.correct ? `<div class="breakdown-ans">Your answer: ${r.yourAnswer} · Correct: ${r.correctAnswer}</div>` : ''}
+        </div>
+      </div>`).join('');
+
+  const entry = {
+    id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+    quizId: quiz.id,
+    quizTitle: quiz.title,
+    category: quiz.category,
+    name: playerName,
+    score, total, pct, points,
+    bestStreak,
+    cheatFlags: cheatCount,
+    completedAt: new Date().toISOString(),
+    breakdown: results
+  };
+  await saveScore(entry);
+}
+
+// ── Anti-cheat ──
+function setupAntiCheat() {
+  document.addEventListener('visibilitychange', onVis);
+  window.addEventListener('blur', onBlur);
+}
+function removeAntiCheat() {
+  document.removeEventListener('visibilitychange', onVis);
+  window.removeEventListener('blur', onBlur);
+}
+function onVis() { if (document.hidden) flagCheat(); }
+function onBlur() { flagCheat(); }
+function flagCheat() {
+  cheatCount++;
+  const b = document.getElementById('cheatBanner');
+  b.classList.add('show');
+  setTimeout(() => b.classList.remove('show'), 3000);
+}
+
+// ── Helpers ──
+function show(id) {
+  ['screenName','screenQuiz','screenMidLB','screenResult'].forEach(s => {
+    document.getElementById(s).style.display = s === id ? (s === 'screenQuiz' ? 'flex' : 'block') : 'none';
+  });
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function getMessage(pct) {
+  if (pct === 100) return 'Perfect score! Absolutely nailed it.';
+  if (pct >= 90) return 'Outstanding! Almost perfect.';
+  if (pct >= 80) return 'Great work! You really know your stuff.';
+  if (pct >= 70) return 'Solid effort. Keep it up!';
+  if (pct >= 50) return 'Getting there — keep practicing!';
+  return 'Keep studying — you\'ll get it. Try again!';
+}
+</script>
+</body>
+</html>
