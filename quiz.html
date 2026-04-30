@@ -45,6 +45,9 @@
   </div>
   <div class="feedback-bar hidden" id="feedbackBar">Correct!</div>
   <div class="answers-grid" id="answersGrid"></div>
+  <div id="nextWrap" style="display:none;padding:0 1.25rem 1.5rem;max-width:780px;margin:0 auto;width:100%">
+    <button class="btn btn-primary btn-lg btn-full" onclick="advance()">Next question →</button>
+  </div>
 </div>
 
 <div id="screenResult" style="display:none">
@@ -134,6 +137,7 @@ function startQuiz() {
 
 function renderQuestion() {
   answered = false;
+  document.getElementById('nextWrap').style.display = 'none';
   const q = questions[currentQ];
   const total = questions.length;
   document.getElementById('qLabel').textContent = 'Question ' + (currentQ + 1) + ' of ' + total;
@@ -187,10 +191,21 @@ function selectAnswer(btn, isCorrect) {
   const correctBtn = Array.from(allBtns).find(b => b.dataset.correct === 'true');
   results.push({ q: questions[currentQ].q, correct: isCorrect, yourAnswer: btn.dataset.text, correctAnswer: correctBtn ? correctBtn.dataset.text : '' });
   document.getElementById('scoreNum').textContent = score + '/' + (currentQ + 1);
-  setTimeout(() => {
-    currentQ++;
-    if (currentQ >= questions.length) { finishQuiz(); } else { show('screenQuiz'); renderQuestion(); }
-  }, 1500);
+
+  const isLast = currentQ + 1 >= questions.length;
+  const nextBtn = document.getElementById('nextWrap');
+  nextBtn.style.display = 'block';
+  nextBtn.querySelector('button').textContent = isLast ? 'See results →' : 'Next question →';
+}
+
+function advance() {
+  currentQ++;
+  if (currentQ >= questions.length) {
+    finishQuiz();
+  } else {
+    show('screenQuiz');
+    renderQuestion();
+  }
 }
 
 async function finishQuiz() {
