@@ -19,7 +19,7 @@
   </div>
 </div>
 
-<div class="host-page">
+<div class="host-page" id="hostPage" style="display:none">
 
   <div class="host-topbar">
     <div>
@@ -95,7 +95,28 @@
 <script src="js/quizzes.js"></script>
 <script src="js/scores.js"></script>
 <script>
+const HOST_PASSWORD = 'js123';
 let allScores = [];
+
+function checkPassword() {
+  const saved = sessionStorage.getItem('ql_host_auth');
+  if (saved === HOST_PASSWORD) {
+    document.getElementById('hostPage').style.display = 'block';
+    init();
+    return;
+  }
+  const pw = prompt('Enter host password:');
+  if (pw === HOST_PASSWORD) {
+    sessionStorage.setItem('ql_host_auth', pw);
+    document.getElementById('hostPage').style.display = 'block';
+    init();
+  } else if (pw !== null) {
+    alert('Incorrect password.');
+    window.location.href = 'index.html';
+  } else {
+    window.location.href = 'index.html';
+  }
+}
 
 async function init() {
   populateFilter();
@@ -170,16 +191,16 @@ function render() {
     lb.innerHTML = sorted.slice(0,25).map((s,i) => {
       const rankClass = i===0?'gold':i===1?'silver':i===2?'bronze':'';
       const initials = s.name.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2);
-      return `<div class="lb-row">
-        <div class="lb-rank ${rankClass}">${i+1}</div>
-        <div class="lb-avatar">${initials}</div>
-        <div class="lb-name">${s.name}<br><span class="text-sm text-muted">${s.quizTitle||''}</span></div>
-        <div class="lb-right">
-          <div class="lb-score">${s.pct}%</div>
-          <div class="lb-sub">${s.score}/${s.total}</div>
-          ${s.cheatFlags>0?'<span class="flag flag-cheat">'+s.cheatFlags+' flag'+(s.cheatFlags>1?'s':'')+'</span>':''}
-        </div>
-      </div>`;
+      return '<div class="lb-row">' +
+        '<div class="lb-rank ' + rankClass + '">' + (i+1) + '</div>' +
+        '<div class="lb-avatar">' + initials + '</div>' +
+        '<div class="lb-name">' + s.name + '<br><span class="text-sm text-muted">' + (s.quizTitle||'') + '</span></div>' +
+        '<div class="lb-right">' +
+          '<div class="lb-score">' + s.pct + '%</div>' +
+          '<div class="lb-sub">' + s.score + '/' + s.total + '</div>' +
+          (s.cheatFlags>0 ? '<span class="flag flag-cheat">' + s.cheatFlags + ' flag' + (s.cheatFlags>1?'s':'') + '</span>' : '') +
+        '</div>' +
+      '</div>';
     }).join('');
   }
 
@@ -191,14 +212,14 @@ function render() {
   } else {
     sub.innerHTML = chrono.map(s => {
       const cls = s.pct>=70?'badge-green':s.pct>=40?'badge-amber':'badge-red';
-      return `<div class="sub-row" onclick="showDetail('${s.id}')">
-        <div class="sub-name">${s.name}</div>
-        <div class="text-sm text-muted" style="margin-right:6px">${s.quizTitle||''}</div>
-        <div style="display:flex;align-items:center;gap:6px">
-          <span class="badge ${cls}">${s.pct}%</span>
-          ${s.cheatFlags>0?'<span class="flag flag-cheat">'+s.cheatFlags+'x</span>':''}
-        </div>
-      </div>`;
+      return '<div class="sub-row" onclick="showDetail(\'' + s.id + '\')">' +
+        '<div class="sub-name">' + s.name + '</div>' +
+        '<div class="text-sm text-muted" style="margin-right:6px">' + (s.quizTitle||'') + '</div>' +
+        '<div style="display:flex;align-items:center;gap:6px">' +
+          '<span class="badge ' + cls + '">' + s.pct + '%</span>' +
+          (s.cheatFlags>0 ? '<span class="flag flag-cheat">' + s.cheatFlags + 'x</span>' : '') +
+        '</div>' +
+      '</div>';
     }).join('');
   }
 }
@@ -208,21 +229,22 @@ function showDetail(id) {
   if (!s) return;
   document.getElementById('detailPanel').style.display = 'block';
   document.getElementById('detailTitle').textContent = s.name + ' — ' + s.pct + '% (' + s.score + '/' + s.total + ')';
-  document.getElementById('detailBody').innerHTML = `
-    <div style="padding:10px 16px;border-bottom:1px solid var(--gray-100);font-size:13px;color:var(--gray-400);background:var(--gray-50)">
-      Quiz: ${s.quizTitle} &nbsp;·&nbsp;
-      Submitted: ${new Date(s.completedAt).toLocaleString()} &nbsp;·&nbsp;
-      Cheat flags: <span style="color:${s.cheatFlags>0?'var(--red)':'var(--green)'};font-weight:700">${s.cheatFlags}</span>
-      ${s.bestStreak ? ' &nbsp;·&nbsp; Best streak: ' + s.bestStreak : ''}
-    </div>
-    ${(s.breakdown||[]).map(r=>`
-      <div class="breakdown-row">
-        <div class="breakdown-icon ${r.correct?'c':'w'}">${r.correct?'✓':'✗'}</div>
-        <div>
-          <div class="breakdown-q">${r.q}</div>
-          ${!r.correct?'<div class="breakdown-ans">Their answer: <strong>'+r.yourAnswer+'</strong> · Correct: <strong>'+r.correctAnswer+'</strong></div>':''}
-        </div>
-      </div>`).join('')}`;
+  document.getElementById('detailBody').innerHTML =
+    '<div style="padding:10px 16px;border-bottom:1px solid var(--gray-100);font-size:13px;color:var(--gray-400);background:var(--gray-50)">' +
+      'Quiz: ' + s.quizTitle + ' &nbsp;·&nbsp; ' +
+      'Submitted: ' + new Date(s.completedAt).toLocaleString() + ' &nbsp;·&nbsp; ' +
+      'Cheat flags: <span style="color:' + (s.cheatFlags>0?'var(--red)':'var(--green)') + ';font-weight:700">' + s.cheatFlags + '</span>' +
+      (s.bestStreak ? ' &nbsp;·&nbsp; Best streak: ' + s.bestStreak : '') +
+    '</div>' +
+    (s.breakdown||[]).map(r =>
+      '<div class="breakdown-row">' +
+        '<div class="breakdown-icon ' + (r.correct?'c':'w') + '">' + (r.correct?'✓':'✗') + '</div>' +
+        '<div>' +
+          '<div class="breakdown-q">' + r.q + '</div>' +
+          (!r.correct ? '<div class="breakdown-ans">Their answer: <strong>' + r.yourAnswer + '</strong> · Correct: <strong>' + r.correctAnswer + '</strong></div>' : '') +
+        '</div>' +
+      '</div>'
+    ).join('');
   document.getElementById('detailPanel').scrollIntoView({ behavior:'smooth' });
 }
 
@@ -256,7 +278,7 @@ function copyLink(url, btn) {
   });
 }
 
-init();
+checkPassword();
 </script>
 </body>
 </html>
