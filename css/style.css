@@ -21,14 +21,10 @@
   --gray-500:   #6B7280;
   --gray-700:   #374151;
   --gray-900:   #111827;
-  --ans-a:      #7C3AED;
-  --ans-a-d:    #5B21B6;
-  --ans-b:      #2563EB;
-  --ans-b-d:    #1D4ED8;
-  --ans-c:      #D97706;
-  --ans-c-d:    #B45309;
-  --ans-d:      #0891B2;
-  --ans-d-d:    #0E7490;
+  --ans-a:      #E21B3C;
+  --ans-b:      #1368CE;
+  --ans-c:      #D89E00;
+  --ans-d:      #26890C;
   --radius:     12px;
   --radius-lg:  16px;
   --radius-xl:  24px;
@@ -155,7 +151,25 @@ body {
 
 /* ── Answer buttons ── */
 .answers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 1rem 1.25rem 0.5rem; max-width: 780px; margin: 0 auto; width: 100%; }
-.ans-btn { padding: 18px 16px; border-radius: var(--radius-lg); border: none; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; display: flex; align-items: center; gap: 12px; color: #fff; text-align: left; transition: transform 0.1s, opacity 0.15s; min-height: 70px; line-height: 1.35; }
+.ans-btn {
+  padding: 18px 16px;
+  border-radius: var(--radius-lg);
+  border: none;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  text-align: left;
+  min-height: 70px;
+  line-height: 1.35;
+  transition: transform 0.1s;
+  position: relative;
+  overflow: hidden;
+}
 .ans-btn:hover:not(:disabled) { transform: scale(1.02); }
 .ans-btn:active:not(:disabled) { transform: scale(0.97); }
 .ans-btn:disabled { cursor: default; }
@@ -164,9 +178,11 @@ body {
 .ans-btn[data-i="2"] { background: var(--ans-c); }
 .ans-btn[data-i="3"] { background: var(--ans-d); }
 .ans-letter { width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0; }
-.ans-btn.correct { background: #059669 !important; outline: 4px solid #fff; transform: scale(1.02); }
-.ans-btn.wrong { background: #111827 !important; opacity: 1; }
-.ans-btn.dimmed { opacity: 0.25; filter: grayscale(0.5); }
+
+/* Answer states — use !important to override all button colors */
+.ans-btn.correct { background: #059669 !important; outline: 4px solid #fff; transform: scale(1.02); opacity: 1 !important; filter: none !important; }
+.ans-btn.wrong { background: #4B5563 !important; opacity: 1 !important; filter: none !important; }
+.ans-btn.dimmed { opacity: 0.3 !important; filter: grayscale(1) !important; }
 
 /* ── Feedback ── */
 .feedback-bar { text-align: center; padding: 10px; font-size: 16px; font-weight: 700; border-radius: var(--radius); max-width: 780px; margin: 0.5rem auto; width: calc(100% - 2.5rem); }
