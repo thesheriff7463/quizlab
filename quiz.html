@@ -167,10 +167,12 @@ function selectAnswer(btn, isCorrect) {
   answered = true;
   const allBtns = document.querySelectorAll('.ans-btn');
   allBtns.forEach(b => { b.disabled = true; });
+
   if (isCorrect) {
     btn.classList.add('correct');
     score++; streak++;
     if (streak > bestStreak) bestStreak = streak;
+    allBtns.forEach(b => { if (b !== btn) b.classList.add('dimmed'); });
     document.getElementById('feedbackBar').className = 'feedback-bar correct';
     document.getElementById('feedbackBar').textContent = '✓ Correct!';
   } else {
@@ -188,14 +190,15 @@ function selectAnswer(btn, isCorrect) {
     document.getElementById('feedbackBar').className = 'feedback-bar wrong';
     document.getElementById('feedbackBar').textContent = '✗ Incorrect — correct answer highlighted in green';
   }
+
   const correctBtn = Array.from(allBtns).find(b => b.dataset.correct === 'true');
   results.push({ q: questions[currentQ].q, correct: isCorrect, yourAnswer: btn.dataset.text, correctAnswer: correctBtn ? correctBtn.dataset.text : '' });
   document.getElementById('scoreNum').textContent = score + '/' + (currentQ + 1);
 
   const isLast = currentQ + 1 >= questions.length;
-  const nextBtn = document.getElementById('nextWrap');
-  nextBtn.style.display = 'block';
-  nextBtn.querySelector('button').textContent = isLast ? 'See results →' : 'Next question →';
+  const nextWrap = document.getElementById('nextWrap');
+  nextWrap.style.display = 'block';
+  nextWrap.querySelector('button').textContent = isLast ? 'See results →' : 'Next question →';
 }
 
 function advance() {
