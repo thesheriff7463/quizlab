@@ -10,7 +10,7 @@
 
 <div class="cheat-banner" id="cheatBanner">⚠️ Heads up — leaving this tab is being recorded!</div>
 
-<div class="header" id="mainHeader">
+<div class="header">
   <div class="header-inner">
     <a href="index.html" class="logo">Berklee Quizzes</a>
     <span class="text-sm text-muted" id="headerTitle"></span>
@@ -35,25 +35,21 @@
       <div class="qprogress-bar"><div class="qprogress-fill" id="qFill" style="width:0%"></div></div>
     </div>
     <div class="quiz-topbar-score">
-      <div class="score-label">Points</div>
-      <div class="score-num" id="scoreNum">0</div>
+      <div class="score-label">Score</div>
+      <div class="score-num" id="scoreNum">0/0</div>
     </div>
   </div>
-
   <div class="question-section">
     <div class="question-num" id="questionNum">Question 1</div>
     <div class="question-text" id="questionText">Loading...</div>
   </div>
-
   <div class="feedback-bar hidden" id="feedbackBar">Correct!</div>
   <div class="answers-grid" id="answersGrid"></div>
 </div>
 
 <div id="screenMidLB" style="display:none">
   <div class="header">
-    <div class="header-inner">
-      <span class="logo">Berklee Quizzes</span>
-    </div>
+    <div class="header-inner"><span class="logo">Berklee Quizzes</span></div>
   </div>
   <div class="mid-lb">
     <h2>🏆 Leaderboard</h2>
@@ -80,12 +76,12 @@
     </div>
     <div class="results-stats">
       <div class="result-stat">
-        <div class="result-stat-num" id="resultPoints" style="color:#7C3AED">0</div>
-        <div class="result-stat-label">Points</div>
-      </div>
-      <div class="result-stat">
         <div class="result-stat-num" id="resultCorrect" style="color:#059669">0</div>
         <div class="result-stat-label">Correct</div>
+      </div>
+      <div class="result-stat">
+        <div class="result-stat-num" id="resultWrong" style="color:#DC2626">0</div>
+        <div class="result-stat-label">Incorrect</div>
       </div>
       <div class="result-stat">
         <div class="result-stat-num" id="resultStreak">0</div>
@@ -103,7 +99,7 @@
 <script src="js/quizzes.js"></script>
 <script src="js/scores.js"></script>
 <script>
-let quiz, questions, currentQ = 0, score = 0, points = 0;
+let quiz, questions, currentQ = 0, score = 0;
 let playerName = '';
 let answered = false;
 let cheatCount = 0;
@@ -140,7 +136,7 @@ function startQuiz() {
     return;
   }
   questions = shuffle([...quiz.questions]);
-  currentQ = 0; score = 0; points = 0; streak = 0; bestStreak = 0; results = [];
+  currentQ = 0; score = 0; streak = 0; bestStreak = 0; results = [];
   show('screenQuiz');
   setupAntiCheat();
   renderQuestion();
@@ -150,19 +146,14 @@ function renderQuestion() {
   answered = false;
   const q = questions[currentQ];
   const total = questions.length;
-
-  document.getElementById('qLabel').textContent = `Question ${currentQ + 1} of ${total}`;
+  document.getElementById('qLabel').textContent = 'Question ' + (currentQ + 1) + ' of ' + total;
   document.getElementById('qFill').style.width = Math.round((currentQ / total) * 100) + '%';
-  document.getElementById('questionNum').textContent = `Question ${currentQ + 1}`;
+  document.getElementById('questionNum').textContent = 'Question ' + (currentQ + 1);
   document.getElementById('questionText').textContent = q.q;
-  document.getElementById('scoreNum').textContent = points.toLocaleString();
-
-  const fb = document.getElementById('feedbackBar');
-  fb.className = 'feedback-bar hidden';
-
+  document.getElementById('scoreNum').textContent = score + '/' + currentQ;
+  document.getElementById('feedbackBar').className = 'feedback-bar hidden';
   const indexed = q.options.map((opt, i) => ({ opt, correct: i === q.answer }));
   const shuffled = shuffle(indexed);
-
   const grid = document.getElementById('answersGrid');
   grid.innerHTML = '';
   shuffled.forEach((item, i) => {
@@ -171,7 +162,7 @@ function renderQuestion() {
     btn.setAttribute('data-i', i);
     btn.dataset.correct = item.correct;
     btn.dataset.text = item.opt;
-    btn.innerHTML = `<span class="ans-letter">${LETTERS[i]}</span><span>${item.opt}</span>`;
+    btn.innerHTML = '<span class="ans-letter">' + LETTERS[i] + '</span><span>' + item.opt + '</span>';
     btn.onclick = () => selectAnswer(btn, item.correct);
     grid.appendChild(btn);
   });
@@ -182,14 +173,12 @@ function selectAnswer(btn, isCorrect) {
   answered = true;
   const allBtns = document.querySelectorAll('.ans-btn');
   allBtns.forEach(b => { b.disabled = true; });
-
   if (isCorrect) {
     btn.classList.add('correct');
-    score++;
-    streak++;
+    score++; streak++;
     if (streak > bestStreak) bestStreak = streak;
-    points += 1000;
-    showFeedback('correct', '+1000 points!');
+    document.getElementById('feedbackBar').className = 'feedback-bar correct';
+    document.getElementById('feedbackBar').textContent = '✓ Correct!';
   } else {
     btn.classList.add('wrong');
     streak = 0;
@@ -197,52 +186,31 @@ function selectAnswer(btn, isCorrect) {
       if (b.dataset.correct === 'true') b.classList.add('correct');
       else if (b !== btn) b.classList.add('dimmed');
     });
-    showFeedback('wrong', 'Incorrect');
+    document.getElementById('feedbackBar').className = 'feedback-bar wrong';
+    document.getElementById('feedbackBar').textContent = '✗ Incorrect';
   }
-
   const correctBtn = Array.from(allBtns).find(b => b.dataset.correct === 'true');
-  results.push({
-    q: questions[currentQ].q,
-    correct: isCorrect,
-    yourAnswer: btn.dataset.text,
-    correctAnswer: correctBtn ? correctBtn.dataset.text : ''
-  });
-
-  document.getElementById('scoreNum').textContent = points.toLocaleString();
+  results.push({ q: questions[currentQ].q, correct: isCorrect, yourAnswer: btn.dataset.text, correctAnswer: correctBtn ? correctBtn.dataset.text : '' });
+  document.getElementById('scoreNum').textContent = score + '/' + (currentQ + 1);
   setTimeout(() => showMidLeaderboard(), 1200);
-}
-
-function showFeedback(type, msg) {
-  const fb = document.getElementById('feedbackBar');
-  fb.className = 'feedback-bar ' + type;
-  fb.textContent = type === 'correct' ? '✓ Correct! ' + msg : '✗ Incorrect';
 }
 
 async function showMidLeaderboard() {
   if (currentQ + 1 >= questions.length) { finishQuiz(); return; }
   show('screenMidLB');
-  const saved = await loadScores();
-  const current = { name: playerName, points, isMe: true };
-  const others = saved.filter(s => s.quizId === quiz.id).map(s => ({ name: s.name, points: s.points || 0 }));
-  const all = [...others, current].sort((a, b) => b.points - a.points);
-  const wrap = document.getElementById('midLBRows');
-  wrap.innerHTML = all.slice(0, 8).map((p, i) => {
+  let others = [];
+  try { const saved = await loadScores(); others = saved.filter(s => s.quizId === quiz.id).map(s => ({ name: s.name, score: s.score, total: s.total })); } catch(e) {}
+  const current = { name: playerName, score, total: currentQ + 1, isMe: true };
+  const all = [...others, current].sort((a, b) => (b.score / b.total) - (a.score / a.total));
+  document.getElementById('midLBRows').innerHTML = all.slice(0, 8).map((p, i) => {
     const rankClass = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
     const initials = p.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-    return `<div class="mid-lb-row ${p.isMe ? 'me' : ''}">
-      <div class="mid-lb-rank ${rankClass}">${i + 1}</div>
-      <div class="mid-lb-avatar">${initials}</div>
-      <div class="mid-lb-name">${p.name}${p.isMe ? ' (you)' : ''}</div>
-      <div class="mid-lb-score">${p.points.toLocaleString()} pts</div>
-    </div>`;
+    const pct = Math.round((p.score / p.total) * 100);
+    return '<div class="mid-lb-row ' + (p.isMe ? 'me' : '') + '"><div class="mid-lb-rank ' + rankClass + '">' + (i+1) + '</div><div class="mid-lb-avatar">' + initials + '</div><div class="mid-lb-name">' + p.name + (p.isMe ? ' (you)' : '') + '</div><div class="mid-lb-score">' + p.score + '/' + p.total + ' · ' + pct + '%</div></div>';
   }).join('');
 }
 
-function nextQuestion() {
-  currentQ++;
-  show('screenQuiz');
-  renderQuestion();
-}
+function nextQuestion() { currentQ++; show('screenQuiz'); renderQuestion(); }
 
 async function finishQuiz() {
   show('screenResult');
@@ -254,66 +222,21 @@ async function finishQuiz() {
   document.getElementById('resultSub').textContent = getMessage(pct);
   document.getElementById('resultPct').textContent = pct + '%';
   document.getElementById('resultFrac').textContent = score + '/' + total;
-  document.getElementById('resultPoints').textContent = points.toLocaleString();
   document.getElementById('resultCorrect').textContent = score;
+  document.getElementById('resultWrong').textContent = total - score;
   document.getElementById('resultStreak').textContent = bestStreak;
-  const bd = document.getElementById('resultBreakdown');
-  bd.innerHTML = '<div class="breakdown-title">Question breakdown</div>' +
-    results.map(r => `<div class="breakdown-row">
-      <div class="breakdown-icon ${r.correct ? 'c' : 'w'}">${r.correct ? '✓' : '✗'}</div>
-      <div>
-        <div class="breakdown-q">${r.q}</div>
-        ${!r.correct ? `<div class="breakdown-ans">Your answer: ${r.yourAnswer} · Correct: ${r.correctAnswer}</div>` : ''}
-      </div>
-    </div>`).join('');
-  await saveScore({
-    id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
-    quizId: quiz.id, quizTitle: quiz.title, category: quiz.category,
-    name: playerName, score, total, pct, points, bestStreak,
-    cheatFlags: cheatCount, completedAt: new Date().toISOString(), breakdown: results
-  });
+  document.getElementById('resultBreakdown').innerHTML = '<div class="breakdown-title">Question breakdown</div>' + results.map(r => '<div class="breakdown-row"><div class="breakdown-icon ' + (r.correct?'c':'w') + '">' + (r.correct?'✓':'✗') + '</div><div><div class="breakdown-q">' + r.q + '</div>' + (!r.correct ? '<div class="breakdown-ans">Your answer: ' + r.yourAnswer + ' · Correct: ' + r.correctAnswer + '</div>' : '') + '</div></div>').join('');
+  try { await saveScore({ id: Date.now() + '-' + Math.random().toString(36).slice(2), quizId: quiz.id, quizTitle: quiz.title, category: quiz.category, name: playerName, score, total, pct, bestStreak, cheatFlags: cheatCount, completedAt: new Date().toISOString(), breakdown: results }); } catch(e) { console.warn('Score save failed', e); }
 }
 
-function setupAntiCheat() {
-  document.addEventListener('visibilitychange', onVis);
-  window.addEventListener('blur', onBlur);
-}
-function removeAntiCheat() {
-  document.removeEventListener('visibilitychange', onVis);
-  window.removeEventListener('blur', onBlur);
-}
+function setupAntiCheat() { document.addEventListener('visibilitychange', onVis); window.addEventListener('blur', onBlur); }
+function removeAntiCheat() { document.removeEventListener('visibilitychange', onVis); window.removeEventListener('blur', onBlur); }
 function onVis() { if (document.hidden) flagCheat(); }
 function onBlur() { flagCheat(); }
-function flagCheat() {
-  cheatCount++;
-  const b = document.getElementById('cheatBanner');
-  b.classList.add('show');
-  setTimeout(() => b.classList.remove('show'), 3000);
-}
-
-function show(id) {
-  ['screenName','screenQuiz','screenMidLB','screenResult'].forEach(s => {
-    document.getElementById(s).style.display = s === id ? (s === 'screenQuiz' ? 'flex' : 'block') : 'none';
-  });
-}
-
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-function getMessage(pct) {
-  if (pct === 100) return 'Perfect score! Absolutely nailed it.';
-  if (pct >= 90) return 'Outstanding! Almost perfect.';
-  if (pct >= 80) return 'Great work! You really know your stuff.';
-  if (pct >= 70) return 'Solid effort. Keep it up!';
-  if (pct >= 50) return 'Getting there — keep practicing!';
-  return 'Keep studying — you\'ll get it. Try again!';
-}
+function flagCheat() { cheatCount++; const b = document.getElementById('cheatBanner'); b.classList.add('show'); setTimeout(() => b.classList.remove('show'), 3000); }
+function show(id) { ['screenName','screenQuiz','screenMidLB','screenResult'].forEach(s => { document.getElementById(s).style.display = s === id ? (s === 'screenQuiz' ? 'flex' : 'block') : 'none'; }); }
+function shuffle(arr) { const a = [...arr]; for (let i = a.length-1; i>0; i--) { const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function getMessage(pct) { if (pct===100) return 'Perfect score! Absolutely nailed it.'; if (pct>=90) return 'Outstanding! Almost perfect.'; if (pct>=80) return 'Great work! You really know your stuff.'; if (pct>=70) return 'Solid effort. Keep it up!'; if (pct>=50) return 'Getting there — keep practicing!'; return "Keep studying — you'll get it. Try again!"; }
 </script>
 </body>
 </html>
