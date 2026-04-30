@@ -9,41 +9,33 @@
 <body>
 <div class="header">
   <div class="header-inner">
-    <a href="index.html" class="logo">Berklee Quizzes</a>
+    <a href="index.html" class="logo">QuizLab</a>
     <a href="host.html" class="btn btn-outline">Host dashboard</a>
   </div>
 </div>
-
 <div class="container">
   <div class="home-hero">
     <h1>What are we studying today?</h1>
     <p>Pick a category, choose a quiz, and go. Your score goes straight to your instructor.</p>
   </div>
-
   <div class="category-grid" id="catGrid"></div>
 </div>
-
 <script src="js/quizzes.js"></script>
 <script>
 const grid = document.getElementById('catGrid');
-
 CATEGORIES.forEach(cat => {
   const quizCount = QUIZZES.filter(q => q.category === cat.id).length;
   if (quizCount === 0) return;
-
   const card = document.createElement('a');
-  card.href = `category.html?id=${cat.id}`;
+  card.href = 'category.html?id=' + cat.id;
   card.className = 'category-card';
-  card.innerHTML = `
-    <div class="category-icon" style="background:${cat.color}22">
-      <span style="font-size:26px">${cat.icon}</span>
-    </div>
-    <div class="category-name">${cat.name}</div>
-    <div class="category-count">${quizCount} quiz${quizCount !== 1 ? 'zes' : ''}</div>
-  `;
+  card.innerHTML =
+    '<div class="category-icon" style="background:' + cat.color + '22">' +
+    '<span style="font-size:26px">' + cat.icon + '</span></div>' +
+    '<div class="category-name">' + cat.name + '</div>' +
+    '<div class="category-count">' + quizCount + ' quiz' + (quizCount !== 1 ? 'zes' : '') + '</div>';
   grid.appendChild(card);
 });
-
 if (grid.children.length === 0) {
   grid.innerHTML = '<p class="text-muted text-sm" style="text-align:center;padding:2rem;grid-column:1/-1">No quizzes added yet. Check back soon!</p>';
 }
