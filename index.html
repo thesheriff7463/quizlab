@@ -10,6 +10,7 @@
 <div class="header">
   <div class="header-inner">
     <a href="index.html" class="logo">QuizLab</a>
+    <button onclick="goToHost()" class="btn btn-outline">Host dashboard</button>
   </div>
 </div>
 <div class="container">
@@ -37,6 +38,15 @@ CATEGORIES.forEach(cat => {
 });
 if (grid.children.length === 0) {
   grid.innerHTML = '<p class="text-muted text-sm" style="text-align:center;padding:2rem;grid-column:1/-1">No quizzes added yet. Check back soon!</p>';
+}
+
+function goToHost() {
+  const pw = prompt('Enter host password:');
+  if (pw === 'js123') {
+    window.location.href = 'host.html';
+  } else if (pw !== null) {
+    alert('Incorrect password.');
+  }
 }
 </script>
 </body>
