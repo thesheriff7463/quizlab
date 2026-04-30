@@ -4,8 +4,8 @@
 //  then paste your Master Key and Bin ID below.
 // ================================================================
 
-const JSONBIN_KEY = 'YOUR_JSONBIN_MASTER_KEY';  // e.g. $2b$10$abc...
-const JSONBIN_BIN = 'YOUR_BIN_ID';              // e.g. 6634a1f...
+const JSONBIN_KEY = '$2a$10$6XI1GsE30Mt1Xz91F2ost.HSGk8Ie6JjcPPcQs0a3ggaZsxq7iAoC';
+const JSONBIN_BIN = '69f36fb036566621a80d5766';           // e.g. 6634a1f...
 
 const BIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN}`;
 const LOCAL_KEY = 'bq_scores_v2';
