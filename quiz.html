@@ -173,11 +173,16 @@ function selectAnswer(btn, isCorrect) {
     btn.classList.add('wrong');
     streak = 0;
     allBtns.forEach(b => {
-      if (b.dataset.correct === 'true') b.classList.add('correct');
-      else if (b !== btn) b.classList.add('dimmed');
+      if (b.dataset.correct === 'true') {
+        b.classList.add('correct');
+        b.style.outline = '4px solid #fff';
+        b.style.transform = 'scale(1.02)';
+      } else if (b !== btn) {
+        b.classList.add('dimmed');
+      }
     });
     document.getElementById('feedbackBar').className = 'feedback-bar wrong';
-    document.getElementById('feedbackBar').textContent = '✗ Incorrect';
+    document.getElementById('feedbackBar').textContent = '✗ Incorrect — correct answer highlighted in green';
   }
   const correctBtn = Array.from(allBtns).find(b => b.dataset.correct === 'true');
   results.push({ q: questions[currentQ].q, correct: isCorrect, yourAnswer: btn.dataset.text, correctAnswer: correctBtn ? correctBtn.dataset.text : '' });
@@ -185,7 +190,7 @@ function selectAnswer(btn, isCorrect) {
   setTimeout(() => {
     currentQ++;
     if (currentQ >= questions.length) { finishQuiz(); } else { show('screenQuiz'); renderQuestion(); }
-  }, 1000);
+  }, 1500);
 }
 
 async function finishQuiz() {
