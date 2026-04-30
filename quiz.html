@@ -92,6 +92,7 @@ let quiz, questions, currentQ = 0, score = 0;
 let playerName = '';
 let answered = false;
 let cheatCount = 0;
+let lastFlag = 0;
 let results = [];
 let streak = 0, bestStreak = 0;
 const LETTERS = ['A','B','C','D','E'];
@@ -207,7 +208,9 @@ async function finishQuiz() {
         '<div class="breakdown-icon ' + (r.correct ? 'c' : 'w') + '">' + (r.correct ? '✓' : '✗') + '</div>' +
         '<div style="flex:1">' +
           '<div class="breakdown-q">' + r.q + '</div>' +
-          (!r.correct ? '<div class="breakdown-ans">Your answer: <strong>' + r.yourAnswer + '</strong> &nbsp;·&nbsp; Correct: <strong>' + r.correctAnswer + '</strong></div>' : '<div class="breakdown-ans" style="color:#059669">You got this one right!</div>') +
+          (!r.correct
+            ? '<div class="breakdown-ans">Your answer: <strong>' + r.yourAnswer + '</strong> &nbsp;·&nbsp; Correct: <strong>' + r.correctAnswer + '</strong></div>'
+            : '<div class="breakdown-ans" style="color:#059669">Correct!</div>') +
         '</div>' +
       '</div>'
     ).join('');
@@ -225,7 +228,15 @@ function setupAntiCheat() { document.addEventListener('visibilitychange', onVis)
 function removeAntiCheat() { document.removeEventListener('visibilitychange', onVis); window.removeEventListener('blur', onBlur); }
 function onVis() { if (document.hidden) flagCheat(); }
 function onBlur() { flagCheat(); }
-function flagCheat() { cheatCount++; const b = document.getElementById('cheatBanner'); b.classList.add('show'); setTimeout(() => b.classList.remove('show'), 3000); }
+function flagCheat() {
+  const now = Date.now();
+  if (now - lastFlag < 1000) return;
+  lastFlag = now;
+  cheatCount++;
+  const b = document.getElementById('cheatBanner');
+  b.classList.add('show');
+  setTimeout(() => b.classList.remove('show'), 3000);
+}
 function show(id) { ['screenName','screenQuiz','screenResult'].forEach(s => { document.getElementById(s).style.display = s === id ? (s === 'screenQuiz' ? 'flex' : 'block') : 'none'; }); }
 function shuffle(arr) { const a=[...arr]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
 function getMessage(pct) {
