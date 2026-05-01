@@ -37,7 +37,6 @@ body {
   min-height: 100vh;
 }
 
-/* ── Header ── */
 .header {
   background: #fff;
   border-bottom: 1px solid var(--gray-200);
@@ -62,7 +61,6 @@ body {
   text-decoration: none;
 }
 
-/* ── Buttons ── */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -91,11 +89,9 @@ body {
 .btn-full { width: 100%; }
 .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 
-/* ── Layout ── */
 .page { min-height: 100vh; }
 .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
 
-/* ── Home ── */
 .home-hero { text-align: center; padding: 3rem 1rem 2.5rem; }
 .home-hero h1 { font-size: 36px; font-weight: 800; letter-spacing: -0.8px; margin-bottom: 10px; }
 .home-hero p { font-size: 17px; color: var(--gray-500); max-width: 460px; margin: 0 auto 2rem; }
@@ -107,7 +103,6 @@ body {
 .category-name { font-size: 17px; font-weight: 700; color: var(--gray-900); }
 .category-count { font-size: 13px; color: var(--gray-400); font-weight: 500; }
 
-/* ── Category page ── */
 .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 500; color: var(--gray-500); text-decoration: none; margin-bottom: 1.5rem; }
 .back-link:hover { color: var(--purple); }
 
@@ -120,7 +115,6 @@ body {
 .quiz-card-meta { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--gray-400); font-weight: 500; margin-top: 4px; }
 .quiz-card-play { margin-top: 8px; padding: 10px 0; background: var(--purple); color: #fff; border-radius: 10px; text-align: center; font-size: 14px; font-weight: 700; }
 
-/* ── Name screen ── */
 .name-screen { min-height: calc(100vh - 58px); display: flex; align-items: center; justify-content: center; padding: 2rem 1rem; }
 .name-card { background: #fff; border-radius: var(--radius-xl); padding: 2.5rem 2rem; width: 100%; max-width: 420px; box-shadow: 0 4px 32px rgba(0,0,0,0.08); text-align: center; border: 2px solid var(--gray-100); }
 .name-card-icon { width: 64px; height: 64px; border-radius: 18px; background: var(--purple-l); display: flex; align-items: center; justify-content: center; font-size: 30px; margin: 0 auto 1rem; }
@@ -131,25 +125,20 @@ body {
 .name-input.error { border-color: var(--red); }
 .name-hint { font-size: 12px; color: var(--gray-400); margin-top: 10px; }
 
-/* ── Quiz screen ── */
 .quiz-screen { min-height: calc(100vh - 58px); display: flex; flex-direction: column; }
-
 .quiz-topbar { background: #fff; border-bottom: 1px solid var(--gray-200); padding: 10px 1.5rem; display: flex; align-items: center; gap: 16px; }
 .quiz-topbar-progress { flex: 1; }
 .qprogress-bar { height: 8px; background: var(--gray-100); border-radius: 4px; overflow: hidden; }
 .qprogress-fill { height: 100%; background: var(--purple); border-radius: 4px; transition: width 0.4s ease; }
 .qprogress-label { font-size: 12px; color: var(--gray-400); font-weight: 500; margin-bottom: 4px; }
-
 .quiz-topbar-score { display: flex; flex-direction: column; align-items: flex-end; min-width: 70px; }
 .score-label { font-size: 11px; color: var(--gray-400); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 .score-num { font-size: 20px; font-weight: 800; color: var(--purple); }
 
-/* ── Question ── */
 .question-section { padding: 1rem 1.25rem 0.5rem; max-width: 780px; margin: 0 auto; width: 100%; }
 .question-num { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--gray-400); margin-bottom: 8px; }
 .question-text { font-size: 20px; font-weight: 700; line-height: 1.4; color: var(--gray-900); background: #fff; border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; border: 2px solid var(--gray-100); }
 
-/* ── Answer buttons ── */
 .answers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 1rem 1.25rem 0.5rem; max-width: 780px; margin: 0 auto; width: 100%; }
 .ans-btn {
   padding: 18px 16px;
@@ -166,7 +155,7 @@ body {
   text-align: left;
   min-height: 70px;
   line-height: 1.35;
-  transition: transform 0.1s;
+  transition: transform 0.1s, filter 0.2s, opacity 0.2s;
   position: relative;
   overflow: hidden;
 }
@@ -190,7 +179,6 @@ body {
   flex-shrink: 0;
 }
 
-/* ── Answer states ── */
 .ans-btn.correct {
   outline: 5px solid #fff;
   box-shadow: 0 0 0 5px #fff;
@@ -215,25 +203,22 @@ body {
   line-height: 1;
 }
 .ans-btn.wrong {
-  opacity: 0.35 !important;
-  filter: grayscale(1) !important;
+  opacity: 0.5 !important;
+  filter: grayscale(0.8) brightness(0.85) !important;
 }
 .ans-btn.dimmed {
-  opacity: 0.25 !important;
-  filter: grayscale(1) !important;
+  opacity: 0.5 !important;
+  filter: grayscale(0.8) brightness(0.85) !important;
 }
 
-/* ── Feedback ── */
 .feedback-bar { text-align: center; padding: 10px; font-size: 16px; font-weight: 700; border-radius: var(--radius); max-width: 780px; margin: 0.5rem auto; width: calc(100% - 2.5rem); }
 .feedback-bar.correct { background: var(--green-l); color: var(--green-d); }
 .feedback-bar.wrong { background: var(--red-l); color: var(--red); }
 .feedback-bar.hidden { display: none; }
 
-/* ── Cheat banner ── */
 .cheat-banner { position: fixed; top: 0; left: 0; right: 0; background: var(--red); color: #fff; text-align: center; padding: 13px; font-size: 14px; font-weight: 700; z-index: 9999; transform: translateY(-100%); transition: transform 0.25s ease; }
 .cheat-banner.show { transform: translateY(0); }
 
-/* ── Results ── */
 .results-screen { min-height: calc(100vh - 58px); display: flex; flex-direction: column; align-items: center; padding: 2rem 1.25rem; }
 .results-podium { text-align: center; margin-bottom: 1.5rem; }
 .results-emoji { font-size: 52px; margin-bottom: 10px; }
@@ -259,7 +244,6 @@ body {
 .breakdown-q { font-size: 14px; color: var(--gray-700); flex: 1; }
 .breakdown-ans { font-size: 12px; color: var(--gray-400); margin-top: 3px; }
 
-/* ── Host dashboard ── */
 .host-page { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
 .host-topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 10px; }
 .host-topbar h1 { font-size: 24px; font-weight: 800; }
