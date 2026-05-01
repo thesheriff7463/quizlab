@@ -177,12 +177,51 @@ body {
 .ans-btn[data-i="1"] { background: var(--ans-b); }
 .ans-btn[data-i="2"] { background: var(--ans-c); }
 .ans-btn[data-i="3"] { background: var(--ans-d); }
-.ans-letter { width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0; }
+.ans-letter {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
 
-/* Answer states — use !important to override all button colors */
-.ans-btn.correct { background: #059669 !important; outline: 4px solid #fff; transform: scale(1.02); opacity: 1 !important; filter: none !important; }
-.ans-btn.wrong { background: #4B5563 !important; opacity: 1 !important; filter: none !important; }
-.ans-btn.dimmed { opacity: 0.3 !important; filter: grayscale(1) !important; }
+/* ── Answer states ── */
+.ans-btn.correct {
+  outline: 5px solid #fff;
+  box-shadow: 0 0 0 5px #fff;
+  transform: scale(1.02);
+  opacity: 1 !important;
+  filter: none !important;
+}
+.ans-btn.correct::after {
+  content: '✓';
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 15px;
+  font-weight: 900;
+  background: rgba(255,255,255,0.35);
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.ans-btn.wrong {
+  opacity: 0.35 !important;
+  filter: grayscale(1) !important;
+}
+.ans-btn.dimmed {
+  opacity: 0.25 !important;
+  filter: grayscale(1) !important;
+}
 
 /* ── Feedback ── */
 .feedback-bar { text-align: center; padding: 10px; font-size: 16px; font-weight: 700; border-radius: var(--radius); max-width: 780px; margin: 0.5rem auto; width: calc(100% - 2.5rem); }
