@@ -1,72 +1,55 @@
-const JSONBIN_KEY = '$2a$10$6XI1GsE30Mt1Xz91F2ost.HSGk8Ie6JjcPPcQs0a3ggaZsxq7iAoC';
-const JSONBIN_BIN = '69f36fb036566621a80d5766';
-const BIN_URL = 'https://api.jsonbin.io/v3/b/' + JSONBIN_BIN;
-const LOCAL_KEY = 'bq_scores_v2';
+const SUPABASE_URL = 'https://mhejqwzcbwibcrbhtdf.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1oZWpxd3pjYndpYmNicmJodGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1ODgxMzUsImV4cCI6MjA5MzE2NDEzNX0.wpQf73wA0rREBDtS0dn5Du0o20AB5NoToWnVSn53syw';
+const TABLE = 'Scores';
+const LOCAL_KEY = 'bq_scores_v3';
 
-function isConfigured() {
-  return JSONBIN_KEY !== 'YOUR_JSONBIN_MASTER_KEY' && JSONBIN_BIN !== 'YOUR_BIN_ID';
-}
+const headers = {
+  'Content-Type': 'application/json',
+  'apikey': SUPABASE_KEY,
+  'Authorization': 'Bearer ' + SUPABASE_KEY
+};
 
 async function loadScores() {
-  if (!isConfigured()) return getLocal();
   try {
-    const res = await fetch(BIN_URL + '/latest', {
-      headers: {
-        'X-Master-Key': JSONBIN_KEY,
-        'X-Bin-Meta': 'false'
-      }
-    });
+    const res = await fetch(SUPABASE_URL + '/rest/v1/' + TABLE + '?select=data&order=created_at.asc', { headers });
     if (!res.ok) throw new Error('load failed');
-    const data = await res.json();
-    return Array.isArray(data.scores) ? data.scores : [];
+    const rows = await res.json();
+    return rows.map(r => JSON.parse(r.data));
   } catch(e) {
-    console.warn('JSONBin load failed, using local', e);
+    console.warn('Supabase load failed, using local', e);
     return getLocal();
   }
 }
 
 async function saveScore(entry) {
   saveLocal(entry);
-  if (!isConfigured()) return;
   try {
-    const existing = await loadScores();
-    const updated = existing.filter(s => s.id !== entry.id);
-    updated.push(entry);
-    const res = await fetch(BIN_URL, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': JSONBIN_KEY
-      },
-      body: JSON.stringify({ scores: updated })
+    const res = await fetch(SUPABASE_URL + '/rest/v1/' + TABLE, {
+      method: 'POST',
+      headers: { ...headers, 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ data: JSON.stringify(entry) })
     });
     if (!res.ok) throw new Error('save failed');
   } catch(e) {
-    console.warn('JSONBin save failed', e);
+    console.warn('Supabase save failed', e);
   }
 }
 
 async function clearAllScores() {
   localStorage.removeItem(LOCAL_KEY);
-  if (!isConfigured()) return;
   try {
-    await fetch(BIN_URL, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': JSONBIN_KEY
-      },
-      body: JSON.stringify({ scores: [] })
+    await fetch(SUPABASE_URL + '/rest/v1/' + TABLE + '?id=gte.0', {
+      method: 'DELETE',
+      headers
     });
   } catch(e) {
-    console.warn('JSONBin clear failed', e);
+    console.warn('Supabase clear failed', e);
   }
 }
 
 function getLocal() {
   try { return JSON.parse(localStorage.getItem(LOCAL_KEY) || '[]'); } catch { return []; }
 }
-
 function saveLocal(entry) {
   try {
     const scores = getLocal();
