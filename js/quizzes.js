@@ -1,5 +1,6 @@
 const CATEGORIES = [
   { id: "pro-tools", name: "Pro Tools", icon: "🎚", color: "#7C3AED" },
+  { id: "ir-209", name: "IR-209", icon: "🎓", color: "#059669" },
 ];
 
 const QUIZZES = [
