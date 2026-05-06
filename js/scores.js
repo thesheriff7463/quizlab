@@ -1,6 +1,6 @@
 const SUPABASE_URL = 'https://mhejqwzcbwibcrbhtdf.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1oZWpxd3pjYndpYmNicmJodGRmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1ODgxMzUsImV4cCI6MjA5MzE2NDEzNX0.wpQf73wA0rREBDtS0dn5Du0o20AB5NoToWnVSn53syw';
-const TABLE = 'Scores';
+const TABLE = 'scores';
 const LOCAL_KEY = 'bq_scores_v3';
 
 const headers = {
