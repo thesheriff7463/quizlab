@@ -1,17 +1,50 @@
-function doGet(e) {
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxTX5DVhrAN2rm49e2hl_VjPFf3ah09woJxfxNc4dKeV_uODZTv6Bv2ln4Xd9uRSr76/exec';
+const LOCAL_KEY = 'bq_scores_v4';
+
+async function loadScores() {
   try {
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
-    if (e.parameter.action === 'clear') {
-      sheet.clearContents();
-      return ContentService.createTextOutput(JSON.stringify({ success: true })).setMimeType(ContentService.MimeType.JSON);
-    }
-    const rows = sheet.getDataRange().getValues();
-    const scores = rows
-      .filter(row => row[1] && row[1] !== 'test')
-      .map(row => { try { return JSON.parse(row[1]); } catch(e) { return null; } })
-      .filter(Boolean);
-    return ContentService.createTextOutput(JSON.stringify(scores)).setMimeType(ContentService.MimeType.JSON);
-  } catch(err) {
-    return ContentService.createTextOutput(JSON.stringify([])).setMimeType(ContentService.MimeType.JSON);
+    const res = await fetch(SCRIPT_URL);
+    if (!res.ok) throw new Error('load failed');
+    const data = await res.json();
+    return Array.isArray(data) ? data : [];
+  } catch(e) {
+    console.warn('Google Sheets load failed, using local', e);
+    return getLocal();
   }
+}
+
+async function saveScore(entry) {
+  saveLocal(entry);
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(entry)
+    });
+  } catch(e) {
+    console.warn('Google Sheets save failed', e);
+  }
+}
+
+async function clearAllScores() {
+  localStorage.removeItem(LOCAL_KEY);
+  try {
+    await fetch(SCRIPT_URL + '?action=clear');
+  } catch(e) {
+    console.warn('Clear failed', e);
+  }
+}
+
+function getLocal() {
+  try { return JSON.parse(localStorage.getItem(LOCAL_KEY) || '[]'); } catch { return []; }
+}
+
+function saveLocal(entry) {
+  try {
+    const scores = getLocal();
+    const updated = scores.filter(s => s.id !== entry.id);
+    updated.push(entry);
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(updated));
+  } catch(e) {}
 }
