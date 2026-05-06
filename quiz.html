@@ -189,7 +189,7 @@ function selectAnswer(btn, isCorrect) {
       }
     });
     document.getElementById('feedbackBar').className = 'feedback-bar wrong';
-    document.getElementById('feedbackBar').textContent = '✗ Incorrect — correct answer highlighted in green';
+    document.getElementById('feedbackBar').textContent = '✗ Incorrect — correct answer highlighted';
   }
 
   const correctBtn = Array.from(allBtns).find(b => b.dataset.correct === 'true');
