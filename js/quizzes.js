@@ -85,8 +85,8 @@ const QUIZZES = [
       { q: "What shortcut cycles through playlists on selected tracks?", options: ["Command + Up or Down Arrow", "Control + Up or Down Arrow", "Shift + Up or Down Arrow", "Option + Up or Down Arrow"], answer: 2 },
       { q: "What shortcut cycles through playlists within a selection?", options: ["Shift + Up or Down Arrow", "Shift + Command + Up or Down Arrow", "Control + Shift + Up or Down Arrow", "Option + Shift + Up or Down Arrow"], answer: 1 },
     ]
-  }
-  ,{
+  },
+  {
     id: "ir209-final-review",
     category: "ir-209",
     title: "IR-209 Final Review",
@@ -199,18 +199,9 @@ const QUIZZES = [
       { q: "What is the industry standard professional tool for remote recording with sample-accurate sync?", options: ["Zoom", "Sonobus", "Source Connect", "Avid Control"], answer: 2 },
       { q: "In the Aux I/O Pro Tools to Zoom routing, which Audio Bridge path sends your mix TO Zoom?", options: ["Pro Tools Audio Bridge 2A", "Pro Tools Audio Bridge 2B", "Pro Tools Audio Bridge 16", "Pro Tools Audio Bridge 32"], answer: 1 },
       { q: "COPY vs ADD when importing audio into Pro Tools — what is the critical difference?", options: ["COPY is higher quality; ADD introduces sample rate conversion", "COPY writes the audio into the session's Audio Files folder keeping it self-contained; ADD just references the original location which can break the session", "ADD creates a duplicate file; COPY creates a reference", "They are identical — both create a copy in the Audio Files folder"], answer: 1 },
-      { q: "What is the second harmonic of a 100Hz tone?", options: ["50 Hz", "150 Hz", "200 Hz", "300 Hz"], answer: 2 },
-      { q: "What is the third harmonic of a 100Hz tone?", options: ["150 Hz", "200 Hz", "300 Hz", "400 Hz"], answer: 2 },
-      { q: "Which waveform most closely resembles the sound of a bowed violin string?", options: ["Sine wave", "Square wave", "Triangle wave", "Sawtooth wave"], answer: 3 },
-      { q: "What does increasing the number of sine waves in additive synthesis do to the resulting waveform?", options: ["Makes it quieter", "Makes it closer to the target waveform shape", "Removes harmonics", "Reduces the fundamental frequency"], answer: 1 },
-      { q: "Sound is fundamentally created by:", options: ["Electrical signals in a circuit", "Something vibrating and moving air molecules", "The movement of electrons through a speaker coil", "Digital samples played back at high speed"], answer: 1 },
-      { q: "In a waveform graph, what does the Y axis represent?", options: ["Time", "Frequency", "Displacement of air molecules", "Decibel level"], answer: 2 },
     ]
-  }
-];
-]
-  }
-  ,{
+  },
+  {
     id: "waveforms-synthesis-1",
     category: "sound-synthesis",
     title: "Waveforms, Harmonics & Synthesis",
