@@ -1,6 +1,7 @@
 const CATEGORIES = [
   { id: "pro-tools", name: "Pro Tools", icon: "🎚", color: "#7C3AED" },
   { id: "ir-209", name: "IR-209", icon: "🎓", color: "#059669" },
+  { id: "sound-synthesis", name: "Sound & Synthesis", icon: "🎛️", color: "#DB2777" },
 ];
 
 const QUIZZES = [
@@ -201,3 +202,9 @@ const QUIZZES = [
     ]
   }
 ];
+{ q: "What is the second harmonic of a 100Hz tone?", options: ["50 Hz", "150 Hz", "200 Hz", "300 Hz"], answer: 2 },
+      { q: "What is the third harmonic of a 100Hz tone?", options: ["150 Hz", "200 Hz", "300 Hz", "400 Hz"], answer: 2 },
+      { q: "Which waveform most closely resembles the sound of a bowed violin string?", options: ["Sine wave", "Square wave", "Triangle wave", "Sawtooth wave"], answer: 3 },
+      { q: "What does increasing the number of sine waves in additive synthesis do to the resulting waveform?", options: ["Makes it quieter", "Makes it closer to the target waveform shape", "Removes harmonics", "Reduces the fundamental frequency"], answer: 1 },
+      { q: "Sound is fundamentally created by:", options: ["Electrical signals in a circuit", "Something vibrating and moving air molecules", "The movement of electrons through a speaker coil", "Digital samples played back at high speed"], answer: 1 },
+      { q: "In a waveform graph, what does the Y axis represent?", options: ["Time", "Frequency", "Displacement of air molecules", "Decibel level"], answer: 2 },
