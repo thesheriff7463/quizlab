@@ -208,3 +208,55 @@ const QUIZZES = [
     ]
   }
 ];
+]
+  }
+  ,{
+    id: "waveforms-synthesis-1",
+    category: "sound-synthesis",
+    title: "Waveforms, Harmonics & Synthesis",
+    description: "Periodic waveforms, harmonics, additive and subtractive synthesis, and how sound works.",
+    timePerQuestion: 0,
+    questions: [
+      { q: "What does a waveform graph show?", options: ["The frequency spectrum of a sound at one instant", "How an air molecule's displacement changes over time", "The amplitude of a signal in decibels", "The number of harmonics in a sound"], answer: 1 },
+      { q: "What is amplitude in the context of a waveform?", options: ["The number of times the wave repeats per second", "The speed at which sound travels through air", "How much an air molecule is displaced from its resting position", "The phase offset between two waves"], answer: 2 },
+      { q: "What happens to a waveform when amplitude is set to zero?", options: ["The frequency doubles", "The wave inverts", "The line flattens — complete silence", "The wave becomes a square wave"], answer: 2 },
+      { q: "What is frequency in audio?", options: ["The maximum displacement of an air molecule", "How many times a waveform repeats per second", "The time it takes for one full oscillation at maximum amplitude", "The difference between the highest and lowest points of a wave"], answer: 1 },
+      { q: "What unit is frequency measured in?", options: ["Decibels", "Pascals", "Hertz", "Watts"], answer: 2 },
+      { q: "What is the approximate range of human hearing?", options: ["1 Hz to 10,000 Hz", "20 Hz to 20,000 Hz", "100 Hz to 15,000 Hz", "50 Hz to 25,000 Hz"], answer: 1 },
+      { q: "What note does a 440 Hz sine wave correspond to?", options: ["C4", "A4", "E4", "G4"], answer: 1 },
+      { q: "What is a periodic waveform?", options: ["A waveform that changes amplitude over time", "A waveform that can be repeated to produce a constant tone", "A waveform with no harmonics", "A waveform that only contains sine waves"], answer: 1 },
+      { q: "Which waveform is considered the fundamental waveform with no harmonics?", options: ["Square wave", "Sawtooth wave", "Triangle wave", "Sine wave"], answer: 3 },
+      { q: "Why is the sine wave called the fundamental waveform?", options: ["It is the loudest of all waveforms", "It has the most harmonics", "It is pure — when you play a 440Hz sine wave the only frequency you hear is 440Hz", "It is the easiest to generate electronically"], answer: 2 },
+      { q: "What are harmonics?", options: ["Additional frequencies created by certain waveforms beyond the root frequency", "The phase relationship between two sine waves", "The resonant frequency of an acoustic space", "The overtones added by compression"], answer: 0 },
+      { q: "Harmonics are always at what frequency relationship to the root?", options: ["Random multiples of the root frequency", "Exact multiples of the root frequency", "Fractions of the root frequency", "Frequencies one octave above the root"], answer: 1 },
+      { q: "Which waveform has only odd harmonics that taper off quickly?", options: ["Sine wave", "Sawtooth wave", "Square wave", "Triangle wave"], answer: 3 },
+      { q: "Which waveform has only odd harmonics that do NOT taper off quickly, making it sound brighter?", options: ["Triangle wave", "Sine wave", "Square wave", "Sawtooth wave"], answer: 2 },
+      { q: "Which waveform contains harmonics at every multiple of the root frequency — both odd and even?", options: ["Sine wave", "Triangle wave", "Square wave", "Sawtooth wave"], answer: 3 },
+      { q: "How does increasing frequency affect the perceived pitch of a sound?", options: ["The pitch gets lower", "The pitch stays the same but gets louder", "The pitch gets higher", "The timbre changes but pitch stays the same"], answer: 2 },
+      { q: "What is white noise?", options: ["A sine wave at very high frequency", "A square wave with maximum amplitude", "A uniform distribution of all audible frequencies with no discernible pitch", "A sawtooth wave with no harmonics"], answer: 2 },
+      { q: "What does additive synthesis do?", options: ["Removes unwanted frequencies from a rich waveform using filters", "Builds complex sounds by layering multiple sine waves together", "Combines two audio signals to cancel phase", "Converts analog signals to digital using waveform addition"], answer: 1 },
+      { q: "What does subtractive synthesis do?", options: ["Adds harmonics to a sine wave to create complexity", "Starts with a harmonically rich waveform and uses filters to remove frequencies", "Combines multiple sine waves to approximate a square wave", "Removes the fundamental frequency leaving only harmonics"], answer: 1 },
+      { q: "Which type of synthesizer typically uses subtractive synthesis?", options: ["Organ", "Additive digital synthesizer", "Classic analog synthesizer like a Moog", "Sampler"], answer: 2 },
+      { q: "Which instrument is a classic example of additive synthesis?", options: ["Moog synthesizer", "Electric guitar", "Organ", "Drum machine"], answer: 2 },
+      { q: "What is waveform addition?", options: ["Increasing the amplitude of a waveform over time", "Combining two or more waveforms by adding their displacement values at each point", "Adding reverb to a dry signal", "Converting a waveform from mono to stereo"], answer: 1 },
+      { q: "What is phase in the context of waveforms?", options: ["The maximum amplitude of a waveform", "The number of harmonics in a waveform", "The amount of time offset applied to a wave measured in degrees", "The frequency difference between two waves"], answer: 2 },
+      { q: "What happens when two identical waves are 180 degrees out of phase and combined?", options: ["The sound doubles in amplitude", "The waves cancel each other out resulting in silence", "The frequency doubles", "The waveform becomes a square wave"], answer: 1 },
+      { q: "How do noise-cancelling headphones work?", options: ["They boost frequencies the ear is less sensitive to", "They record ambient noise, offset its phase by 180 degrees, and mix it in to cancel the noise", "They use subtractive synthesis to filter background frequencies", "They use additive synthesis to mask unwanted sounds"], answer: 1 },
+      { q: "What does the Fourier transform do?", options: ["Converts analog audio to digital", "Splits a complex wave into its individual sine wave components", "Adds harmonics to a sine wave", "Measures the amplitude of a waveform over time"], answer: 1 },
+      { q: "What does a sawtooth waveform sound like compared to a sine wave?", options: ["Identical — they have the same harmonic content", "Much brighter and richer because it contains both odd and even harmonics", "Darker and rounder because it has fewer harmonics", "Quieter because its amplitude tapers off"], answer: 1 },
+      { q: "Why does a square wave sound brighter than a triangle wave?", options: ["It has a higher fundamental frequency", "It has more amplitude", "It has the same odd harmonics but they don't taper off as quickly", "It contains even harmonics that the triangle wave doesn't"], answer: 2 },
+      { q: "What file format uses Fourier transforms to compress audio by discarding less important frequencies?", options: ["WAV", "AIFF", "FLAC", "MP3"], answer: 3 },
+      { q: "What image format uses a similar frequency-based compression technique to MP3?", options: ["PNG", "TIFF", "JPEG", "BMP"], answer: 2 },
+      { q: "In subtractive synthesis, what tool is used to remove unwanted frequencies?", options: ["An oscillator", "A filter", "A compressor", "An envelope"], answer: 1 },
+      { q: "What is the relationship between a waveform's frequency and its pitch?", options: ["Higher frequency means lower pitch", "Frequency and pitch are unrelated", "Higher frequency means higher pitch", "Pitch is determined by amplitude not frequency"], answer: 2 },
+      { q: "According to additive synthesis theory, what waveform can theoretically be built from an infinite number of sine waves?", options: ["Triangle wave only", "Any periodic waveform including square and sawtooth", "Only waveforms with odd harmonics", "Only waveforms with even harmonics"], answer: 1 },
+      { q: "What happens to a sound when you remove higher frequencies in subtractive synthesis?", options: ["It gets louder", "It sounds brighter", "It sounds darker and lower", "The pitch rises"], answer: 2 },
+      { q: "What is the second harmonic of a 100Hz tone?", options: ["50 Hz", "150 Hz", "200 Hz", "300 Hz"], answer: 2 },
+      { q: "What is the third harmonic of a 100Hz tone?", options: ["150 Hz", "200 Hz", "300 Hz", "400 Hz"], answer: 2 },
+      { q: "Which waveform most closely resembles the sound of a bowed violin string?", options: ["Sine wave", "Square wave", "Triangle wave", "Sawtooth wave"], answer: 3 },
+      { q: "What does increasing the number of sine waves in additive synthesis do to the resulting waveform?", options: ["Makes it quieter", "Makes it closer to the target waveform shape", "Removes harmonics", "Reduces the fundamental frequency"], answer: 1 },
+      { q: "Sound is fundamentally created by:", options: ["Electrical signals in a circuit", "Something vibrating and moving air molecules", "The movement of electrons through a speaker coil", "Digital samples played back at high speed"], answer: 1 },
+      { q: "In a waveform graph, what does the Y axis represent?", options: ["Time", "Frequency", "Displacement of air molecules", "Decibel level"], answer: 2 },
+    ]
+  }
+];
